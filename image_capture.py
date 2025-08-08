@@ -1,6 +1,7 @@
 import os
 import csv
 from dataGathering import car_data
+from config import DATA, CSV
 
 # === State ===
 csv_created = False
@@ -13,8 +14,7 @@ APP_NAME = 'image_capture'
 def acMain(ac_version):
     global csv_created, csv_file, csv_writer
 
-
-    data_dir = "data"
+    data_dir = os.path.join(DATA, CSV)
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
 
