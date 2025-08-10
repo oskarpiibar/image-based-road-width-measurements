@@ -1,3 +1,4 @@
+import ac
 import os
 import csv
 from dataGathering import car_data
@@ -14,16 +15,18 @@ APP_NAME = 'image_capture'
 def acMain(ac_version):
     global csv_created, csv_file, csv_writer
 
-    data_dir = os.path.join(DATA, CSV)
-    if not os.path.exists(data_dir):
-        os.makedirs(data_dir)
-
     # Create timestamped CSV
-    session_file = "session_name.txt"
+    session_file = os.path.join(os.path.dirname(__file__), "session_name.txt")
     with open(session_file, "r") as f:
         session_name = f.read().strip()
 
-    filepath = os.path.join(data_dir, session_name + ".csv")
+    # Create folders if they don't exist
+    dirname = os.path.dirname(__file__)
+    data_dir = os.path.join(dirname, DATA, CSV)
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+
+    filepath = os.path.join(data_dir, f"game_data_{session_name}.csv")
     csv_file = open(filepath, 'w', newline='')
     csv_writer = csv.writer(csv_file)
     csv_writer.writerow(['timestamp', 'lap_position', 'pos_x', 'pos_y', 'image_filename'])
