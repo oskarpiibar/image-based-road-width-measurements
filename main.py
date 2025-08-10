@@ -102,7 +102,7 @@ if __name__ == '__main__':
         except:
             print("\nAn error occurred when generating the grouped results. Check for any errors in your work.\n")
     else:
-        print("\nSkipping road-type evaluation and grouped results until manual work is complete."
+        print("\nSkipping road-type evaluation and grouped results until manual work is complete. "
               "Once you have finished re-run the main.py code.\n")
 
     print("All the code has successfully finished running. The results can be in more detail seen in "
