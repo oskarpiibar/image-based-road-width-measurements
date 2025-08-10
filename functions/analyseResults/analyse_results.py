@@ -9,9 +9,9 @@ import pandas as pd
 #                (623, 643), (693, 713), (794, 800), (836, 855)]
 # LEFT_TURNS = [(206, 227), (242, 258), (328, 346), (533, 548), (598, 608), (788, 793)]
 
-STRAIGHTS = [(2, 8), (16, 19)]
-RIGHT_TURNS = [(9, 15)]
-LEFT_TURNS = [] # <- in the occurrence of no left turns
+# STRAIGHTS = [(2, 8), (16, 19)]
+# RIGHT_TURNS = [(9, 15)]
+# LEFT_TURNS = [] # <- in the occurrence of no left turns
 
 meter_to_pixel_ratio = 0.01249999999999986
 ground_truth_ratio = 0.018871954437029596
