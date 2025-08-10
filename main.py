@@ -24,11 +24,11 @@ if __name__ == '__main__':
     processed_timestamps_log_folder = os.path.join(DATA, PROCESSED_LOG)
     # ---------------- SETUP PATHS --------------------------------
 
-    # ---------------- ENSURE PATH EXISTENCE --------------------------------
+    # ---------------- ENSURE PATH EXISTS --------------------------------
     os.makedirs(timestamp_csv_folder, exist_ok=True)
     os.makedirs(timestamp_processed_images_folder, exist_ok=True)
     os.makedirs(processed_timestamps_log_folder, exist_ok=True)
-    # ---------------- ENSURE PATH EXISTENCE --------------------------------
+    # ---------------- ENSURE PATH EXISTS --------------------------------
 
     # ---------------- SETUP CSVs --------------------------------
     processed_timestamps_log = os.path.join(processed_timestamps_log_folder, "processed_timestamps.json")
