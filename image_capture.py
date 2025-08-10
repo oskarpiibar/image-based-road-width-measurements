@@ -10,7 +10,7 @@ csv_created = False
 csv_file = None
 csv_writer = None
 last_logged_ts = None
-APP_NAME = 'python_project'
+APP_NAME = 'image_capture'
 
 
 def acMain(ac_version):
