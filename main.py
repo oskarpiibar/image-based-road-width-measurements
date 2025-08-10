@@ -55,12 +55,12 @@ if __name__ == '__main__':
                              measured_data_csv)
         print("Finished processing the gathered images\n")
 
-        measured_df = pd.read_csv(measured_data_csv)
-
         processed_timestamps.add(timestamp)
         save_processed_timestamps(processed_timestamps_log, processed_timestamps)
     else:
         print(f"\nSkipping image processing function (batch_process_folder) for {timestamp} (already processed)\n")
+
+    measured_df = pd.read_csv(measured_data_csv)
 
     # Checks if there are collected data points that do not have images and the other way around
     missing_images, missing_data_points = keepImagesWithCsvData.compare_images_with_csv(game_collected_data_csv,
