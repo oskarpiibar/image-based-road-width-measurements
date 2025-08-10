@@ -10,7 +10,7 @@ Then choose the light gray Mercedes SLS AMG as your car and a track to your liki
 The weather conditions should be set to `Clear`.
 
 ## External image capture
-Before the images can be captured make sure you are using a Python 3.10.12 version, create a venv, activate the venv, download the required packages from the `requirements.txt` file.
+Before the images can be captured make sure you are using a Python 3.10.12 version, create a venv `& "path_to_python/python.exe" -m venv venv`, activate the venv with `venv/Scripts/activate`, download the required packages from the `requirements.txt` file with `pip install -r requirements.txt`.
 * Open an external terminal supported by your operating system and naviagte to the `image_capture` folder
 * Run this in the `image_capture` folder `python dataGathering/external_capture.py`
 * A 30-second countdown is then intiazised before the images are captured
