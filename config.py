@@ -1,0 +1,7 @@
+TEMPLATE_FOLDER = "carTemplates"
+DATA = "data"
+PROCESSED_IMAGES = "processedImages"
+IMAGES = "images"
+CSV = "csv"
+TRUTH_DATA = "truthData"
+PROCESSED_LOG = "processedTimestampsLog"
