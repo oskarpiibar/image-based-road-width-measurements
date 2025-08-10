@@ -12,6 +12,7 @@ The weather conditions should be set to `Clear`.
 ## External image capture
 Before the images can be captured make sure you are using a Python 3.10.12 version, create a venv `& "path_to_python/python.exe" -m venv venv`, activate the venv with `venv/Scripts/activate`, download the required packages from the `requirements.txt` file with `pip install -r requirements.txt`, add python 3.10.12 as the python interpreter.
 * Open an external terminal supported by your operating system and naviagte to the `image_capture` folder
+* Activate the venv
 * Run this in the `image_capture` folder `python dataGathering/external_capture.py`
 * A 30-second countdown is then intiazised before the images are captured
 * Start the game
