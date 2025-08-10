@@ -1,33 +1,21 @@
 import pandas as pd
 import numpy as np
-import os
 
 
-def map_measured_to_truth(truth_data_csv, measured_data_csv, output_csv):
+def map_measured_to_truth(truth_data_df, measured_data_df):
     track_length = 5148 # length for the Nurburgring GP track
-    files = [f for f in os.listdir(measured_data_csv) if f.endswith('.csv')]
-    files.sort()
-    latest_file = files[-1] if files else None
-
-    if not latest_file:
-        raise FileNotFoundError("No gathered data files found in folder.")
-
-    gathered_data_path = os.path.join(measured_data_csv, latest_file)
-
-    # Load data
-    truth_df = pd.read_csv(truth_data_csv)
-    gathered_df = pd.read_csv(gathered_data_path)
+    truth_data_df = truth_data_df.copy()
 
     # Create normalized track position
-    truth_df['track_pos'] = np.linspace(0, 1, len(truth_df), endpoint=False)
+    truth_data_df['track_pos'] = np.linspace(0, 1, len(truth_data_df), endpoint=False)
 
     results = []
-    for _, row in gathered_df.iterrows():
+    for _, row in measured_data_df.iterrows():
         car_lap_pos = row['lap_position']
 
         # Closest index in truth track
-        i_closest = (truth_df['track_pos'] - car_lap_pos).abs().idxmin()
-        truth_row = truth_df.iloc[i_closest]
+        i_closest = (truth_data_df['track_pos'] - car_lap_pos).abs().idxmin()
+        truth_row = truth_data_df.iloc[i_closest]
 
         # Distance to raceline
         car_x, car_y = row['pos_x'], row['pos_y']
@@ -60,13 +48,10 @@ def map_measured_to_truth(truth_data_csv, measured_data_csv, output_csv):
             'distance_to_raceline': dist_to_raceline,
             'left_border': (float(truth_row['left_border_x']), float(truth_row['left_border_y'])),
             'right_border': (float(truth_row['right_border_x']), float(truth_row['right_border_y'])),
-            'filename': row['image_filename'],
+            'filename': row['filename'],
             'truth_left_rel_width': truth_left_rel_width,
             'truth_right_rel_width': truth_right_rel_width,
             'truth_width': truth_width
         })
 
-    # Save to file
-    result_df = pd.DataFrame(results)
-    result_df.to_csv(output_csv, index=False)
-    print(f"Saved mapping results to {output_csv}")
+    return pd.DataFrame(results)

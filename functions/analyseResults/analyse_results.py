@@ -3,11 +3,15 @@ from scipy.stats import pearsonr
 import pandas as pd
 
 # === Needs to be defined manually, look at the example below. First image excluded
-STRAIGHTS = [(2, 22), (51, 90), (101, 160), (230, 240), (271, 300), (371, 457),
-             (480, 532), (554, 597), (609, 622), (644, 692), (714, 787), (801, 835), (856, 896)]
-RIGHT_TURNS = [(23, 47), (186, 193), (262, 270), (356, 370), (458, 478), (540, 553),
-               (623, 643), (693, 713), (794, 800), (836, 855)]
-LEFT_TURNS = [(206, 227), (242, 258), (328, 346), (533, 548), (598, 608), (788, 793)]
+# STRAIGHTS = [(2, 22), (51, 90), (101, 160), (230, 240), (271, 300), (371, 457),
+#              (480, 532), (554, 597), (609, 622), (644, 692), (714, 787), (801, 835), (856, 896)]
+# RIGHT_TURNS = [(23, 47), (186, 193), (262, 270), (356, 370), (458, 478), (540, 553),
+#                (623, 643), (693, 713), (794, 800), (836, 855)]
+# LEFT_TURNS = [(206, 227), (242, 258), (328, 346), (533, 548), (598, 608), (788, 793)]
+
+STRAIGHTS = [(2, 8), (16, 19)]
+RIGHT_TURNS = [(9, 15)]
+LEFT_TURNS = [] # <- in the occurrence of no left turns
 
 meter_to_pixel_ratio = 0.01249999999999986
 ground_truth_ratio = 0.018871954437029596
@@ -20,14 +24,14 @@ def expand_ranges(ranges):
     return indices
 
 
-def evaluate_predictions(csv_path, pred_col='road_width', truth_col='truth_width'):
-    df = pd.read_csv(csv_path)
-
+def evaluate_predictions(input_csv_path, output_csv, pred_col='road_width', truth_col='truth_width'):
+    df = pd.read_csv(input_csv_path)
     df_full = df.copy()
 
     # Removes the first row as the first row equals to the truth data.
-    # If that's not the case comment it out
-    df_analysis = df.iloc[1:].copy()
+    # If that's not the case comment the next line and uncomment the df_analysis = df.copy line
+    # df_analysis = df.iloc[1:].copy()
+    df_analysis = df.copy()
 
     # Add per-row MAPE (absolute percentage error)
     df_analysis["MAPE"] = (abs(df_analysis[pred_col] - df_analysis[truth_col]) / df_analysis[truth_col]).astype(float)
@@ -42,10 +46,10 @@ def evaluate_predictions(csv_path, pred_col='road_width', truth_col='truth_width
     r2 = r2_score(y_true, y_pred)
     corr, _ = pearsonr(y_true, y_pred)
 
-    print("Ground truth ratio metrics")
+    print("Ground truth ratio metrics\n")
     print(f"MAPE width: {mape:.4f}")
     print(f"R-squared width: {r2:.4f}")
-    print(f"Pearson’s correlation width: {corr:.4f}")
+    print(f"Pearson’s correlation width: {corr:.4f}\n")
 
     # Calculate relative distance difference from measured width
     df_analysis["rel_dist_diff_from_width"] = df_analysis["road_width"] - \
@@ -62,9 +66,10 @@ def evaluate_predictions(csv_path, pred_col='road_width', truth_col='truth_width
     r2_other = r2_score(y_true, y_pred_other)
     corr_other, _ = pearsonr(y_true, y_pred_other)
 
-    print(f"MAPE width other: {mape_other:.4f}")
-    print(f"R-squared width other: {r2_other:.4f}")
-    print(f"Pearson’s correlation width other: {corr_other:.4f}")
+    print("Calculated ratio variable metrics\n")
+    print(f"MAPE calculated ratio var: {mape_other:.4f}")
+    print(f"R-squared calculated ratio var: {r2_other:.4f}")
+    print(f"Pearson’s correlation calculated ratio var: {corr_other:.4f}\n")
 
 
     # Trial with a random ratio variable (performs really good)
@@ -78,12 +83,10 @@ def evaluate_predictions(csv_path, pred_col='road_width', truth_col='truth_width
     r2_trial = r2_score(y_true, y_pred_trial)
     corr_trial, _ = pearsonr(y_true, y_pred_trial)
 
-    print(f"MAPE width trial: {mape_trial:.4f}")
-    print(f"R-squared width trial: {r2_trial:.4f}")
-    print(f"Pearson’s correlation width trial: {corr_trial:.4f}")
-
-
-
+    print("Trial ratio variable metrics\n")
+    print(f"MAPE width trial ratio var: {mape_trial:.4f}")
+    print(f"R-squared width trial ratio var: {r2_trial:.4f}")
+    print(f"Pearson’s correlation width trial ratio var: {corr_trial:.4f}\n")
 
     # Relative position MAPE
     df_analysis["pred_rel_pos"] = df_analysis["distance_left"] + df_analysis["distance_right"]
@@ -100,9 +103,10 @@ def evaluate_predictions(csv_path, pred_col='road_width', truth_col='truth_width
     r2_rel = r2_score(y_true_rel, y_pred_rel)
     corr_rel, _ = pearsonr(y_true_rel, y_pred_rel)
 
+    print("Relative distance metrics\n")
     print(f"MAPE relative distance: {mape_rel:.4f}")
     print(f"R-squared relative distance: {r2_rel:.4f}")
-    print(f"Pearson’s correlation relative distance: {corr_rel:.4f}")
+    print(f"Pearson’s correlation relative distance: {corr_rel:.4f}\n")
 
     df_full.loc[df_analysis.index, "MAPE"] = df_analysis["MAPE"]
     df_full.loc[df_analysis.index, "rel_dist_diff_from_width"] = df_analysis["rel_dist_diff_from_width"]
@@ -111,7 +115,7 @@ def evaluate_predictions(csv_path, pred_col='road_width', truth_col='truth_width
     df_full.loc[df_analysis.index, "rel_pos_mape"] = df_analysis["rel_pos_mape"]
 
     # Save updated CSV with row-wise MAPE
-    df_full.to_csv(csv_path, index=False)
+    df_full.to_csv(output_csv, index=False)
 
 
 def evaluate_subset(df, indices, pred_col='road_width', truth_col='truth_width'):
@@ -128,7 +132,6 @@ def evaluate_subset(df, indices, pred_col='road_width', truth_col='truth_width')
 def evaluate_by_road_type(csv_path):
     df = pd.read_csv(csv_path)
 
-    df_full = df.copy()
     df_analysis = df.iloc[1:].copy()
 
     groups = {
@@ -138,8 +141,14 @@ def evaluate_by_road_type(csv_path):
     }
 
     for name, indices in groups.items():
-        mape, r2, corr = evaluate_subset(df_analysis, indices)
-        print(f"=== {name} ===")
+        valid_indices = [i for i in indices if 0 <= i < len(df_analysis)]
+        if not valid_indices:
+            print(f"\n=== {name} ===")
+            print("No data available for this group.\n")
+            continue
+
+        mape, r2, corr = evaluate_subset(df_analysis, valid_indices)
+        print(f"\n=== {name} ===")
         print(f"MAPE: {mape:.4f}")
         print(f"R-squared: {r2:.4f}")
         print(f"Pearson correlation: {corr:.4f}\n")
@@ -185,8 +194,3 @@ def generate_grouped_results(input_csv_path, output_csv_path):
 
     # Save to single output file
     output_df.to_csv(output_csv_path, index=False)
-
-path = r"C:\Program Files (x86)\Steam\steamapps\common\assettocorsa\apps\python\image_capture"
-evaluate_predictions(path + r'\results.csv')
-evaluate_by_road_type(path + r'\results.csv')
-generate_grouped_results(path + r'\results.csv', path + r"\grouped_results.csv")
