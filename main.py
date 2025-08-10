@@ -42,7 +42,6 @@ if __name__ == '__main__':
 
     # ---------------- CREATE DFs --------------------------------
     game_df = pd.read_csv(game_collected_data_csv)
-    measured_df = pd.read_csv(measured_data_csv)
     truth_df = pd.read_csv(truth_csv)
     # ---------------- CREATE DFs --------------------------------
 
@@ -55,6 +54,8 @@ if __name__ == '__main__':
         batch_process_folder(latest_folder, timestamp_processed_images_folder, TEMPLATE_FOLDER,
                              measured_data_csv)
         print("Finished processing the gathered images\n")
+
+        measured_df = pd.read_csv(measured_data_csv)
 
         processed_timestamps.add(timestamp)
         save_processed_timestamps(processed_timestamps_log, processed_timestamps)
