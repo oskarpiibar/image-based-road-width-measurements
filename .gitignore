@@ -1,1 +1,8 @@
 /venv
+.idea
+__pycache__/
+dataGathering/__pycache__/
+functions/analyseResults/__pycache__/
+functions/imageProcessing/__pycache__/
+functions/preprocessing/__pycache__/
+functions/processedTimestampsLog/__pycache__/
